@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Presentación de la plataforma de cotización y ventas de Mundo de Interiores.">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23FFFFFF' stroke='%23E4E4E7'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='15' fill='%23141519' text-anchor='middle'%3EMDI%3C/text%3E%3C/svg%3E">
+<title>Plataforma Mundo de Interiores</title>
+<!-- Sin fuentes por internet: se vería sin colores ni caía la interacción del
+     todo, mientras carga, en un iPad sin wifi. Usa Georgia y el sans del
+     sistema, que ya están instaladas en cualquier iPhone o iPad. -->
+
+<style>
+:root{
+  /* Blanco y gris, un solo acento en negro. El color se guarda para la
+     lámina 06, donde el color mismo es el contenido: el semáforo de cobro. */
+  --bg:#FFFFFF; --superficie:#FAFAFA; --superficie-2:#F1F1F3;
+  --linea:#E4E4E7; --linea-2:#D2D2D7;
+  --tinta:#141519; --gris:#55575E; --gris-2:#86888F; --gris-3:#B7B9BE;
+  /* Semáforo de cobro: mismos tonos que usa la aplicación real, para que la
+     lámina 06 se vea igual que la pantalla que van a usar. */
+  --ambar:#8A6A2E; --verde:#3D6B52; --petroleo:#3A5A64; --apagado:#85878E;
+  --ambar-t:rgba(138,106,46,.12); --verde-t:rgba(61,107,82,.12);
+  --petroleo-t:rgba(58,90,100,.12); --apagado-t:rgba(133,135,142,.12);
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:ui-monospace,Menlo,monospace;
+  --max:1100px;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--tinta);
+  font-family:var(--sans); font-size:17px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    repeating-linear-gradient(to right,var(--linea) 0 1px,transparent 1px 64px),
+    repeating-linear-gradient(to bottom,var(--linea) 0 1px,transparent 1px 64px);
+  background-attachment:fixed;
+}
+h1,h2,h3{margin:0;font-weight:400;text-wrap:balance}
+p{margin:0}
+a{color:var(--tinta);text-decoration:underline;text-underline-offset:3px;font-weight:600}
+:focus-visible{outline:2px solid var(--tinta);outline-offset:3px;border-radius:2px}
+
+.plato{
+  max-width:var(--max); margin:0 auto;
+  padding:clamp(56px,9vh,104px) clamp(20px,5vw,40px);
+  border-bottom:1px solid var(--linea);
+}
+.plato:last-child{border-bottom:0}
+
+/* Etiqueta de hoja de plano: el número dice qué lámina es, no decora.
+   Negro y negritas en vez de color: lo importante se marca por peso. */
+.hoja{
+  display:flex; align-items:baseline; gap:14px;
+  font-family:var(--mono); font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--gris-2); margin-bottom:26px;
+}
+.hoja::after{content:'';flex:1;height:1px;background:var(--linea)}
+.hoja b{color:var(--tinta);font-weight:700}
+/* La cifra va después de la regla, pegada al margen derecho de la hoja. */
+.hoja .tarifa{order:1;font-variant-numeric:tabular-nums;letter-spacing:.06em;text-decoration:underline;text-underline-offset:3px}
+
+.enunciado{font-family:var(--serif);font-size:clamp(30px,4.6vw,50px);line-height:1.08;letter-spacing:-.02em}
+.sub{font-family:var(--serif);font-size:clamp(23px,2.9vw,30px);line-height:1.2;letter-spacing:-.015em}
+.bajada{color:var(--gris);max-width:60ch;margin-top:18px;font-size:clamp(16px,1.7vw,18.5px)}
+.nota{color:var(--gris-2);font-size:14.5px;line-height:1.55}
+.mono{font-family:var(--mono)}
+.cifra{font-family:var(--serif);font-size:clamp(30px,3.6vw,42px);line-height:1;font-variant-numeric:tabular-nums}
+
+.malla{display:grid;gap:clamp(16px,2.4vw,26px)}
+.m2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.m3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.m4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:860px){.m3,.m4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.m2,.m3,.m4{grid-template-columns:1fr}}
+
+.ficha{background:var(--superficie);border:1px solid var(--linea);border-radius:4px;padding:22px}
+.ficha h3{font-size:17px;font-weight:600;letter-spacing:-.005em}
+.ficha p{margin-top:8px}
+.rotulo{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gris-2)}
+
+/* ---------- portada ---------- */
+.portada{min-height:92vh;display:flex;flex-direction:column;justify-content:center}
+.portada .enunciado{font-size:clamp(38px,7vw,80px)}
+.cintillo{display:flex;flex-wrap:wrap;gap:10px;margin-top:38px}
+.chip{
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.05em;
+  border:1px solid var(--linea-2);border-radius:2px;padding:7px 13px;color:var(--gris);
+  background:var(--superficie);
+}
+
+/* cota: la línea de dimensión de un plano, con sus topes */
+.cota{display:flex;align-items:center;gap:0;margin:34px 0 0;color:var(--gris-2)}
+.cota i{display:block;width:1px;height:13px;background:var(--gris-2)}
+.cota span{flex:1;height:1px;background:var(--gris-2)}
+.cota em{
+  font-family:var(--mono);font-style:normal;font-size:12px;letter-spacing:.12em;
+  padding:0 14px;text-transform:uppercase;white-space:nowrap;
+}
+
+/* ---------- instrumento: notación ---------- */
+.instrumento{background:var(--superficie);border:1px solid var(--linea);border-radius:4px;overflow:hidden}
+.instrumento__cab{
+  display:flex;align-items:center;gap:10px;padding:13px 20px;
+  border-bottom:1px solid var(--linea);background:var(--superficie-2);
+}
+.instrumento__cab .rotulo{flex:1}
+.punto{width:7px;height:7px;border-radius:50%;background:var(--verde);flex:none}
+.instrumento__cuerpo{padding:22px 20px}
+
+.campo{display:block}
+.campo span{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--gris-2);margin-bottom:8px}
+.campo input{
+  width:100%;font-family:var(--mono);font-size:clamp(17px,2.2vw,22px);
+  background:var(--bg);color:var(--tinta);
+  border:1px solid var(--linea-2);border-radius:3px;padding:14px 16px;
+}
+.campo input:focus{outline:none;border-color:var(--tinta);box-shadow:0 0 0 3px var(--superficie-2)}
+
+.eco{margin-top:16px;font-family:var(--mono);font-size:14px;color:var(--gris);line-height:1.7;word-break:break-word}
+.eco b{color:var(--tinta);font-weight:700}
+.eco .mal{color:#8C4A45}
+
+.marcador{display:flex;flex-wrap:wrap;gap:26px;margin-top:22px;padding-top:20px;border-top:1px solid var(--linea)}
+.marcador div{min-width:120px}
+.marcador .rotulo{margin-bottom:5px}
+.marcador .v{font-family:var(--serif);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+
+.teclas{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:20px;max-width:330px}
+.tecla{
+  height:44px;border:1px solid var(--linea-2);border-radius:3px;background:var(--superficie-2);
+  color:var(--tinta);font-family:var(--mono);font-size:16px;cursor:pointer;
+  transition:background .12s ease,border-color .12s ease;
+}
+.tecla:hover{background:var(--linea);border-color:var(--gris-2)}
+.tecla:active{transform:scale(.96)}
+.tecla--ac{color:var(--tinta);border-color:var(--tinta);background:var(--superficie-2);font-weight:700}
+
+/* ---------- instrumento: semáforo ---------- */
+.obra{border:1px solid var(--linea);border-radius:4px;background:var(--superficie);overflow:hidden;transition:border-color .3s ease}
+.obra__barra{height:5px;background:var(--ambar);transition:background .3s ease}
+.obra__cuerpo{padding:20px}
+.obra__cab{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.sello{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 10px;border-radius:2px;white-space:nowrap;
+  background:var(--ambar-t);color:var(--ambar);transition:background .3s ease,color .3s ease;
+}
+.obra__reglon{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-top:1px solid var(--linea);font-size:15px}
+.obra__reglon:first-of-type{border-top:0}
+.obra__reglon b{font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums}
+
+input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
+
+.escala{display:grid;gap:12px;margin-top:24px}
+.paso{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+.paso i{width:11px;height:11px;border-radius:2px;margin-top:6px;flex:none}
+.paso b{display:block;font-size:15.5px;font-weight:600}
+.paso span{display:block;color:var(--gris-2);font-size:14px;line-height:1.5}
+
+/* ---------- listas ---------- */
+.lista{list-style:none;padding:0;margin:0;display:grid;gap:11px}
+.lista li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;color:var(--gris);font-size:15.5px;line-height:1.55}
+.lista li::before{content:'';width:14px;height:2px;background:var(--tinta);margin-top:12px}
+
+.tabla{width:100%;border-collapse:collapse;font-size:15px}
+.tabla th{
+  text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--gris-2);font-weight:400;
+  padding:0 14px 11px 0;border-bottom:1px solid var(--linea-2);
+}
+.tabla td{padding:13px 14px 13px 0;border-bottom:1px solid var(--linea);vertical-align:top;color:var(--gris)}
+.tabla td:first-child{color:var(--tinta);font-weight:600}
+.tabla .n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--tinta)}
+.envoltura{overflow-x:auto}
+.envoltura>.tabla{min-width:520px}
+
+/* Recuadro de comparación: sin línea de color a la izquierda. El rótulo
+   en negritas y subrayado es lo que marca cuál es cuál. */
+.pieza{background:var(--superficie);border:1px solid var(--linea);border-radius:4px;padding:18px 20px}
+.pieza .rotulo{font-weight:700;color:var(--tinta);text-decoration:underline;text-underline-offset:3px}
+
+.destacado{background:var(--superficie);border:1px solid var(--linea);border-radius:4px;padding:clamp(24px,4vw,38px)}
+
+/* ---------- precios ---------- */
+.precio{
+  background:var(--superficie);border:1px solid var(--linea);border-radius:4px;
+  padding:24px 22px;display:flex;flex-direction:column;
+}
+/* El precio principal se marca con borde más grueso y rótulo subrayado,
+   no con un color distinto de los otros dos. */
+.precio--fuerte{border:2px solid var(--tinta)}
+.precio--fuerte .rotulo{font-weight:700;color:var(--tinta);text-decoration:underline;text-underline-offset:3px}
+.precio__n{
+  font-family:var(--serif);font-size:clamp(38px,5.2vw,58px);line-height:1;
+  letter-spacing:-.025em;font-variant-numeric:tabular-nums;margin-top:14px;
+}
+.precio__u{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris-2);margin-top:9px}
+.precio__terminos{font-size:13px;color:var(--gris);margin-top:8px}
+.precio .lista{margin-top:18px;padding-top:18px;border-top:1px solid var(--linea)}
+.precio .lista li{font-size:14.5px}
+
+.retorno{display:grid;grid-template-columns:auto 1fr;gap:clamp(22px,4vw,44px);align-items:center}
+@media(max-width:700px){.retorno{grid-template-columns:1fr}}
+.retorno__n{font-family:var(--serif);font-size:clamp(56px,9vw,104px);line-height:.9;color:var(--tinta);font-variant-numeric:tabular-nums;text-decoration:underline;text-underline-offset:8px}
+
+.cuenta{display:grid;gap:7px;margin-top:16px;font-family:var(--mono);font-size:13.5px;color:var(--gris-2)}
+.cuenta div{display:flex;justify-content:space-between;gap:16px;max-width:420px;padding-bottom:6px;border-bottom:1px solid var(--linea)}
+.cuenta div:last-child{border-bottom:0;color:var(--tinta);font-weight:700}
+.cuenta b{font-weight:500;font-variant-numeric:tabular-nums}
+
+/* ---------- comparación de fases, en chico ---------- */
+.fases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;font-size:12.5px;color:var(--gris)}
+@media(max-width:600px){.fases{grid-template-columns:1fr}}
+.fases h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris-2);font-weight:600;margin-bottom:8px}
+.fases ul{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.fases li{padding-left:12px;position:relative}
+.fases li::before{content:'–';position:absolute;left:0;color:var(--gris-3)}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- impresión a PDF: una lámina por página, horizontal ---------- */
+@media print{
+  @page{size:landscape;margin:12mm 14mm}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body{background-attachment:scroll}
+  .plato{page-break-after:always;break-after:page;border-bottom:0}
+  .plato:last-child{page-break-after:auto;break-after:auto}
+}
+</style>
+</head>
+<body>
+<!-- ============================================ 01 PORTADA -->
+<section class="plato portada">
+  <div class="hoja"><b>Lámina 01</b><span>Mundo de Interiores</span></div>
+
+  <h1 class="enunciado">La casa se mide<br>con números,<br>no con letras.</h1>
+
+  <p class="bajada">
+    Plataforma de cotización y control de ventas para Mundo de Interiores.
+    Levantamiento en obra desde el teléfono, cotización con merma y caja completa,
+    y el mes de las tres tiendas en una sola pantalla.
+  </p>
+
+  <div class="cintillo">
+    <span class="chip">3 tiendas</span>
+    <span class="chip">6 asesores</span>
+    <span class="chip">32 proveedores</span>
+    <span class="chip">143 pruebas automáticas</span>
+  </div>
+
+  <div class="cota"><i></i><span></span><em>Versión 2 · Agosto 2026</em><span></span><i></i></div>
+</section>
+
+<!-- ============================================ 02 EL PROBLEMA -->
+<section class="plato">
+  <div class="hoja"><b>Lámina 02</b><span>De dónde venimos</span></div>
+  <h2 class="enunciado">El cuello de botella nunca<br>fue el precio por metro.</h2>
+  <p class="bajada">
+    Es todo lo que va alrededor: la merma que nadie cobra, la caja que se compra completa
+    y se factura a medias, y un mes de ventas que solo existe cuando alguien se sienta a juntarlo.
+  </p>
+
+  <div class="malla m2" style="margin-top:38px">
+    <div class="pieza">
+      <div class="rotulo">Antes</div>
+      <ul class="lista" style="margin-top:14px">
+        <li>La medida se anota en Notas del teléfono y se vuelve a teclear en la oficina.</li>
+        <li>La merma y el redondeo a caja se calculan de memoria, o no se calculan.</li>
+        <li>34 hojas de Excel sueltas con las listas de 32 proveedores.</li>
+        <li>El mes se arma preguntándole a cada quien qué vendió.</li>
+        <li>Una cotización enviada y una venta cobrada se ven igual en la carpeta.</li>
+      </ul>
+    </div>
+    <div class="pieza">
+      <div class="rotulo">Ahora</div>
+      <ul class="lista" style="margin-top:14px">
+        <li>Se mide una vez, en el teléfono, y pasa a la cotización sin volver a teclear.</li>
+        <li>Merma por patrón, caja completa, zoclo y accesorios: automáticos y explicados.</li>
+        <li>El catálogo se carga del Excel y queda buscable por línea, color y medida.</li>
+        <li>El mes se arma solo, por asesor y por tienda, y se exporta a CSV.</li>
+        <li>El color dice si está cotizada, anticipada o liquidada, sin abrir nada.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 03 DOS CAMINOS -->
+<section class="plato">
+  <div class="hoja"><b>Lámina 03</b><span>Cómo se entra</span></div>
+  <h2 class="enunciado">Dos caminos,<br>no doce pestañas.</h2>
+  <p class="bajada">
+    Quien abre la aplicación decide primero a qué vino. Cada tarjeta abre su propio menú
+    y el logotipo regresa a la portada. Nadie tiene que aprenderse dónde está nada.
+  </p>
+
+  <div class="malla m2" style="margin-top:38px">
+    <div class="ficha">
+      <div class="rotulo">Camino 1</div>
+      <h3 style="margin-top:10px;font-family:var(--serif);font-size:24px;font-weight:400">Cotización</h3>
+      <p class="nota">Medir en obra · Cotizar · Catálogo · Ayuda · Servicios</p>
+      <div class="cota" style="margin-top:20px"><i></i><span></span><em>De la cinta al PDF</em><span></span><i></i></div>
+    </div>
+    <div class="ficha">
+      <div class="rotulo">Camino 2</div>
+      <h3 style="margin-top:10px;font-family:var(--serif);font-size:24px;font-weight:400">Reporte mensual de ventas</h3>
+      <p class="nota">Reporte del mes · Registrar venta · Tablero de dirección</p>
+      <div class="cota" style="margin-top:20px"><i></i><span></span><em>Del anticipo al cierre</em><span></span><i></i></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 04 MEDIR - instrumento vivo -->
+<section class="plato">
+  <div class="hoja"><b>Lámina 04</b><span>Medir en obra</span></div>
+  <h2 class="enunciado">La notación que<br>ya usa el equipo.</h2>
+  <p class="bajada">
+    Sebastián no aprende un sistema nuevo: escribe como escribe hoy en sus notas.
+    La aplicación entiende esa notación y hace la suma. Pruébalo aquí mismo.
+  </p>
+
+  <div class="instrumento" style="margin-top:34px">
+    <div class="instrumento__cab">
+      <span class="punto"></span>
+      <span class="rotulo">Cuarto 2 · Área en m²</span>
+      <span class="rotulo mono" style="color:var(--gris-2)">en vivo</span>
+    </div>
+    <div class="instrumento__cuerpo">
+      <label class="campo">
+        <span>Escribe medidas separadas por coma</span>
+        <input id="notacion" value="16.45,3.81,2.29" spellcheck="false" autocomplete="off"
+               aria-describedby="eco">
+      </label>
+
+      <div class="teclas" aria-label="Teclado de la aplicación">
+        <button class="tecla" data-t="7">7</button>
+        <button class="tecla" data-t="8">8</button>
+        <button class="tecla" data-t="9">9</button>
+        <button class="tecla" data-borrar aria-label="Borrar">⌫</button>
+        <button class="tecla" data-t="4">4</button>
+        <button class="tecla" data-t="5">5</button>
+        <button class="tecla" data-t="6">6</button>
+        <button class="tecla tecla--ac" data-t="," aria-label="Siguiente medida">,</button>
+        <button class="tecla" data-t="1">1</button>
+        <button class="tecla" data-t="2">2</button>
+        <button class="tecla" data-t="3">3</button>
+        <button class="tecla" data-t="*" aria-label="Multiplicar">×</button>
+        <button class="tecla" data-t=".">.</button>
+        <button class="tecla" data-t="0">0</button>
+        <button class="tecla" data-t="(2)" aria-label="Repetir la medida">(2)</button>
+        <button class="tecla" data-limpiar aria-label="Limpiar">C</button>
+      </div>
+
+      <div class="eco" id="eco" role="status" aria-live="polite"></div>
+
+      <div class="marcador">
+        <div><div class="rotulo">Área</div><div class="v" id="v-area">0.00 m²</div></div>
+        <div><div class="rotulo">Medidas</div><div class="v" id="v-cuenta">0</div></div>
+        <div><div class="rotulo">Estimado con IVA</div><div class="v" id="v-mxn" style="font-weight:700">-</div></div>
+      </div>
+      <p class="nota" style="margin-top:14px">
+        Estimado a $300/m² con 10% de merma. Es el promedio provisional hasta cargar las listas reales.
+      </p>
+    </div>
+  </div>
+
+  <div class="malla m4" style="margin-top:26px">
+    <div class="ficha"><div class="rotulo">Coma</div><p class="nota">Separa una medida de la siguiente. Es la tecla más grande.</p></div>
+    <div class="ficha"><div class="rotulo">(2)</div><p class="nota">Esa medida, dos veces. Vuelve a tocarla y sube a tres.</p></div>
+    <div class="ficha"><div class="rotulo">×</div><p class="nota">Los dos lados de un rectángulo, cuando se mide con cinta.</p></div>
+    <div class="ficha"><div class="rotulo">Z−</div><p class="nota">El renglón del zoclo. Va aparte, en metros lineales.</p></div>
+  </div>
+</section>
+
+<!-- ============================================ 05 DE LA NOTA A LA OBRA -->
+<section class="plato">
+  <div class="hoja"><b>Lámina 05</b><span>Levantamiento completo</span></div>
+  <h2 class="enunciado">Pega la nota.<br>Salen los cuartos.</h2>
+  <p class="bajada">
+    La nota del teléfono se pega tal como está. La aplicación separa cuartos, manda los renglones
+    <span class="mono">Z−</span> al zoclo, arma la escalera con piezas, ancho, huella y peralte,
+    y distingue <span class="mono">Cuarto 2</span> (nombre) de <span class="mono">Descanso 2.11</span> (medida).
+  </p>
+
+  <div class="envoltura" style="margin-top:32px">
+    <table class="tabla">
+      <thead><tr><th>Cuarto</th><th>Lo que se pegó</th><th class="n">m²</th><th class="n">ml</th></tr></thead>
+      <tbody>
+        <tr><td>Cuarto 2</td><td class="mono" style="font-size:13.5px">16.45,3.81,2.29</td><td class="n">22.55</td><td class="n">19.01</td></tr>
+        <tr><td>Cuarto 1</td><td class="mono" style="font-size:13.5px">21.9,1.86(2),.42(2)</td><td class="n">26.46</td><td class="n">14.20</td></tr>
+        <tr><td>Escalera</td><td class="mono" style="font-size:13.5px">14 piezas · .90 · .32 · .15</td><td class="n">5.92</td><td class="n">3.29</td></tr>
+        <tr><td>Descanso</td><td class="mono" style="font-size:13.5px">2.11 · Z−2.13,1.10</td><td class="n">2.11</td><td class="n">3.23</td></tr>
+        <tr><td>Cocina</td><td class="mono" style="font-size:13.5px">9.20,6.82,2.50,1,2.1</td><td class="n">21.62</td><td class="n">-</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="malla m3" style="margin-top:34px">
+    <div class="ficha">
+      <h3>Cuartos de un toque</h3>
+      <p class="nota">Recámara, baño, cocina, sala, comedor, pasillo, escalera, patio.
+      Cada chip numera solo y el bote lo quita. Da igual si la casa trae tres cuartos o siete.</p>
+    </div>
+    <div class="ficha">
+      <h3>Láser o cinta</h3>
+      <p class="nota">Arriba a la derecha se elige con qué se está midiendo. Con láser se captura
+      el área directa; con cinta cambian los ejemplos a dos lados multiplicados.</p>
+    </div>
+    <div class="ficha">
+      <h3>Fotos, opcionales</h3>
+      <p class="nota">Cada cuarto acepta fotos de la cámara. Se reducen solas: una foto de 4 MB
+      queda en 200 KB. Nunca son obligatorias.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 06 SEMAFORO - instrumento vivo -->
+<section class="plato">
+  <div class="hoja"><b>Lámina 06</b><span>El semáforo de cobro</span></div>
+  <h2 class="enunciado">El color lo dice antes<br>de que leas la cifra.</h2>
+  <p class="bajada">
+    El anticipo es lo que vuelve venta a una cotización. Mueve el pago y mira cómo
+    cambia la obra: ámbar mientras solo está cotizada, verde cuando entra el
+    anticipo del 80%, azul cuando queda liquidada.
+  </p>
+
+  <div class="malla m2" style="margin-top:34px;align-items:start">
+    <div class="obra" id="obra">
+      <div class="obra__barra" id="obra-barra"></div>
+      <div class="obra__cuerpo">
+        <div class="obra__cab">
+          <strong style="font-size:19px">Casa Jackie</strong>
+          <span class="sello" id="obra-sello">Cotizada</span>
+        </div>
+        <p class="nota" style="margin:6px 0 16px">Fernando · Santa Fe · 78.66 m² de SPC</p>
+        <div class="obra__reglon"><span>Total de la venta</span><b>$100,000</b></div>
+        <div class="obra__reglon"><span>Anticipo esperado (80%)</span><b>$80,000</b></div>
+        <div class="obra__reglon"><span>Pagado hasta hoy</span><b id="obra-pagado">$0</b></div>
+        <div class="obra__reglon"><span id="obra-faltaK">Falta para arrancar</span><b id="obra-falta">$80,000</b></div>
+        <p class="nota" id="obra-nota" style="margin-top:14px">Enviada al cliente y sin pago. El anticipo es lo que la vuelve venta.</p>
+      </div>
+    </div>
+
+    <div>
+      <label class="campo">
+        <span>Pago registrado</span>
+        <input type="range" id="pago" min="0" max="100000" step="1000" value="0"
+               aria-label="Pago registrado de la obra">
+      </label>
+      <div class="escala">
+        <div class="paso"><i style="background:var(--ambar)"></i><div><b>Cotizada</b><span>Enviada y sin pago. No suma como venta.</span></div></div>
+        <div class="paso"><i style="background:var(--verde)"></i><div><b>Anticipada</b><span>Entró el 80%. Ya se levanta la requisición.</span></div></div>
+        <div class="paso"><i style="background:var(--petroleo)"></i><div><b>Liquidada</b><span>Pagada al cien por ciento.</span></div></div>
+        <div class="paso"><i style="background:var(--apagado)"></i><div><b>Cancelada</b><span>No se concretó. No cuenta para el mes ni para el asesor.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 07 EL MES -->
+<section class="plato">
+  <div class="hoja"><b>Lámina 07</b><span>Reporte mensual</span></div>
+  <h2 class="enunciado">El mes de las tres tiendas,<br>sin preguntarle a nadie.</h2>
+  <p class="bajada">
+    Vendido, cobrado y por cobrar. Qué vendió cada asesor y de qué familia salió.
+    Y el detalle por línea y color, que es como el equipo lo pide al proveedor.
+  </p>
+
+  <div class="malla m3" style="margin-top:34px">
+    <div class="ficha"><div class="rotulo">Santa Fe</div><div class="cifra" style="margin-top:10px">$110,000</div><p class="nota" style="margin-top:8px">69.1% del mes · 2 ventas</p></div>
+    <div class="ficha"><div class="rotulo">Pedregal</div><div class="cifra" style="margin-top:10px">$49,200</div><p class="nota" style="margin-top:8px">30.9% del mes · 1 venta</p></div>
+    <div class="ficha"><div class="rotulo">Tercera tienda</div><div class="cifra" style="margin-top:10px;color:var(--gris-2)">-</div><p class="nota" style="margin-top:8px">Sin asesores capturados todavía</p></div>
+  </div>
+
+  <div class="malla m2" style="margin-top:26px">
+    <div class="ficha">
+      <h3>Quién ve qué</h3>
+      <p class="nota">Fernando, Melissa y Sebastián ven las tres tiendas. Cada asesor ve solo lo suyo.
+      Sin servidor ni contraseñas, esta separación depende de la confianza del equipo.
+      El control real entra en la fase 2, y conviene decirlo así al equipo.</p>
+    </div>
+    <div class="ficha">
+      <h3>La carpeta del proyecto</h3>
+      <p class="nota">Presupuesto, pago del anticipo, requisición, orden de compra e instalación,
+      cada uno con su responsable. En cuanto la orden de compra queda marcada, la pantalla dice
+      que Aarón ya puede pedir el material.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 08 QUÉ INCLUYE -->
+<section class="plato">
+  <div class="hoja"><b>Lámina 08</b><span>Entregado y funcionando</span><b class="tarifa">$85,000 MXN</b></div>
+  <h2 class="enunciado">22 funciones activas.</h2>
+
+  <div class="malla m3" style="margin-top:34px">
+    <div class="ficha"><h3>Medidor de obra</h3><p class="nota">Teclado numérico propio, cuartos de un toque, escaleras por escalón, láser o cinta, fotos opcionales.</p></div>
+    <div class="ficha"><h3>Importar la nota</h3><p class="nota">Se pega la nota del teléfono y salen los cuartos separados, con su zoclo y su escalera.</p></div>
+    <div class="ficha"><h3>Motor de cálculo</h3><p class="nota">Merma por patrón, caja completa, tela por pliegue, área mínima de persiana, boquilla.</p></div>
+    <div class="ficha"><h3>PDF de propuesta</h3><p class="nota">Tres páginas, con material y accesorios separados de instalación y mano de obra.</p></div>
+    <div class="ficha"><h3>Catálogo e importación</h3><p class="nota">Alta y edición de materiales, cambio de precios por familia, carga desde Excel o CSV.</p></div>
+    <div class="ficha"><h3>Reporte mensual</h3><p class="nota">Por asesor, por tienda, por familia y por línea y color. Exporta a CSV.</p></div>
+    <div class="ficha"><h3>Semáforo de cobro</h3><p class="nota">Cotizada, anticipada, liquidada o cancelada. El color cambia al capturar el pago.</p></div>
+    <div class="ficha"><h3>Margen en vivo</h3><p class="nota">Visible mientras se cotiza, nunca impreso. Avisa por debajo de 30% y de 25%.</p></div>
+    <div class="ficha"><h3>Capacitación y respaldo</h3><p class="nota">Tutorial guiado, asistente de dudas con 50 respuestas, respaldo completo en un archivo.</p></div>
+  </div>
+
+  <div class="cota" style="margin-top:32px"><i></i><span></span><em>143 pruebas automáticas · todas pasan</em><span></span><i></i></div>
+</section>
+
+<!-- ============================================ 09 FASE 2 -->
+<section class="plato">
+  <div class="hoja"><b>Lámina 09</b><span>Lo que falta · Fase 2</span><b class="tarifa">$120,000 MXN</b></div>
+  <h2 class="enunciado">Sin las listas de precios,<br>el número sigue siendo aproximado.</h2>
+  <p class="bajada">
+    Es el trabajo que hace que el estimado de campo y el margen dejen de ser promedios.
+    Precio cerrado.
+  </p>
+
+  <div class="malla m2" style="margin-top:34px">
+    <div class="pieza">
+      <h3 style="font-size:17px;font-weight:600">Migración de datos</h3>
+      <ul class="lista" style="margin-top:14px">
+        <li>34 hojas de Excel a hoja de cálculo compartida.</li>
+        <li>32 proveedores con su estructura real: apartado, proveedor, código, línea, color y bisel.</li>
+        <li>Mano de obra con la tarifa real de cuadrilla, por familia y por dificultad.</li>
+      </ul>
+    </div>
+    <div class="pieza">
+      <h3 style="font-size:17px;font-weight:600">Plataforma compartida</h3>
+      <ul class="lista" style="margin-top:14px">
+        <li>Base de datos: un solo catálogo que las tres tiendas ven igual.</li>
+        <li>Cuenta y contraseña por persona, en lugar de la separación por confianza de hoy.</li>
+        <li>Mes consolidado automático, sin juntar los CSV de cada quien.</li>
+        <li>Respaldo diario fuera de la oficina.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 10 ENLACES -->
+<section class="plato">
+  <div class="hoja"><b>Lámina 10</b><span>Cómo se entra hoy</span></div>
+  <h2 class="enunciado">Ya está en línea.</h2>
+  <p class="bajada">
+    Con dominio propio, ninguna de estas direcciones vuelve a aparecer: el enlace que
+    usan a diario dice el nombre de la empresa, no el de un repositorio de pruebas.
+  </p>
+
+  <div class="ficha" style="margin-top:30px">
+    <h3>Dominio propio · menos de $1,000 al año</h3>
+    <p class="nota">Se apunta un dominio de la empresa a esta misma aplicación, sin cambiar nada del
+    código: <b style="color:var(--tinta)">cotizador.mundodeinteriores.mx</b>, o el nombre que decidan, en
+    vez de <span class="mono">castacu0.github.io</span>. El hosting no tiene costo; lo único que se
+    renta es el nombre, y la renovación queda a nombre de Mundo de Interiores para que el enlace
+    nunca dependa de un tercero.</p>
+  </div>
+
+  <p class="rotulo" style="margin-top:30px">Mientras tanto, dirección temporal de la demostración</p>
+  <div class="envoltura" style="margin-top:12px">
+    <table class="tabla">
+      <thead><tr><th>Para</th><th>Dirección</th><th>Quién la usa</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Aplicación completa</td>
+          <td class="mono" style="font-size:13.5px">castacu0.github.io/cotizador-fmp/</td>
+          <td>Las computadoras de las tres tiendas</td>
+        </tr>
+        <tr>
+          <td>Medidor</td>
+          <td class="mono" style="font-size:13.5px">castacu0.github.io/cotizador-fmp/#/medidor</td>
+          <td>El teléfono de quien mide</td>
+        </tr>
+        <tr>
+          <td>Pruebas del motor</td>
+          <td class="mono" style="font-size:13.5px;color:var(--gris)">castacu0.github.io/cotizador-fmp/pruebas.html</td>
+          <td>Verificación técnica</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="ficha" style="margin-top:20px">
+    <h3>Dejarla como aplicación en el teléfono</h3>
+    <p class="nota">Se abre el enlace del medidor en Safari, se toca Compartir y luego
+    <em>Agregar a inicio</em>. Queda a pantalla completa, sin barra del navegador, con su icono.
+    En Android es el menú de tres puntos, <em>Agregar a pantalla principal</em>.</p>
+  </div>
+</section>
+
+<!-- ============================================ 11 INVERSIÓN -->
+<section class="plato">
+  <div class="hoja"><b>Lámina 11</b><span>Inversión</span></div>
+  <h2 class="enunciado">Lo que cuesta.</h2>
+
+  <div class="malla m3" style="margin-top:34px;align-items:stretch">
+    <div class="precio precio--fuerte">
+      <div class="rotulo">Entregado y funcionando</div>
+      <div class="precio__n">$85,000</div>
+      <div class="precio__u">MXN · pago único</div>
+      <div class="precio__terminos">60% a la firma · 40% contra entrega</div>
+      <ul class="lista">
+        <li>Medidor de obra, cotizador, catálogo, PDF y reporte de ventas.</li>
+        <li>Publicada en línea, lista para el teléfono de quien mide.</li>
+        <li>Tutorial guiado y asistente de dudas para los seis asesores.</li>
+        <li>143 pruebas automáticas del motor de cálculo.</li>
+      </ul>
+    </div>
+
+    <div class="precio">
+      <div class="rotulo">Fase 2 · precio cerrado</div>
+      <div class="precio__n">$120,000</div>
+      <div class="precio__u">MXN · pago único</div>
+      <div class="precio__terminos">60% al inicio · 40% contra entrega</div>
+      <ul class="lista">
+        <li>Las 34 listas de precios y los 32 proveedores, migrados y verificados.</li>
+        <li>Base de datos compartida: un solo catálogo para las tres tiendas.</li>
+        <li>Cuenta y contraseña por persona, con permisos reales.</li>
+        <li>Mes consolidado automático y respaldo diario fuera de la oficina.</li>
+      </ul>
+    </div>
+
+    <div class="precio">
+      <div class="rotulo">Soporte y cambios</div>
+      <div class="precio__n">$10,000</div>
+      <div class="precio__u">MXN · al mes</div>
+      <ul class="lista">
+        <li>Cambios de precios, tarifas y catálogo cuando el proveedor los mueva.</li>
+        <li>Ajustes a la plataforma conforme cambie la operación.</li>
+        <li>Atención directa por WhatsApp, sin mesa de ayuda de por medio.</li>
+        <li>Respaldos revisados y la plataforma al día.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="nota" style="margin-top:22px">
+    Precios en pesos mexicanos, antes de IVA. Sin descuento. El dominio propio se renta aparte,
+    por debajo de $1,000 al año; el hosting no tiene costo.
+  </p>
+
+  <div class="fases" style="margin-top:28px;padding-top:22px;border-top:1px solid var(--linea)">
+    <div>
+      <h4>Fase 1 ya hace</h4>
+      <ul>
+        <li>Medir, cotizar, catálogo, PDF y reporte de ventas, en línea.</li>
+        <li>Semáforo de cobro por obra: cotizada, anticipada, liquidada, cancelada.</li>
+        <li>Catálogo cargado por cada computadora, sin sincronizar entre tiendas.</li>
+        <li>Acceso por confianza: sin cuentas ni contraseñas.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Fase 2 agrega</h4>
+      <ul>
+        <li>Las 34 listas de precios y los 32 proveedores, ya migrados.</li>
+        <li>Un solo catálogo compartido entre Santa Fe, Pedregal y la tercera tienda.</li>
+        <li>Cuenta y contraseña por persona, con permisos reales.</li>
+        <li>Mes consolidado automático y respaldo diario fuera de la oficina.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 12 RETORNO -->
+<section class="plato">
+  <div class="hoja"><b>Lámina 12</b><span>Lo que devuelve</span></div>
+  <h2 class="enunciado">Se paga sola<br>a las 62 cotizaciones.</h2>
+  <p class="bajada">
+    No es una promesa: es la cuenta con los supuestos que ustedes mismos capturaron en Ajustes,
+    y ahí se pueden cambiar. Con seis asesores son diez cotizaciones cada uno.
+  </p>
+
+  <div class="destacado" style="margin-top:32px">
+    <div class="retorno">
+      <div>
+        <div class="retorno__n">62</div>
+        <div class="rotulo" style="margin-top:12px">Cotizaciones para recuperarla</div>
+      </div>
+      <div>
+        <div class="rotulo">Cómo sale la cuenta</div>
+        <div class="cuenta">
+          <div><span>Armar una cotización, antes</span><b>3.5 h</b></div>
+          <div><span>Armar una cotización, ahora</span><b>12 min</b></div>
+          <div><span>Costo de la hora del asesor</span><b>$420</b></div>
+          <div><span>Ahorro por cotización</span><b>$1,386</b></div>
+          <div><span>$85,000 ÷ $1,386</span><b>62 cotizaciones</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="malla m2" style="margin-top:26px">
+    <div class="pieza">
+      <h3 style="font-size:17px;font-weight:600">Y eso sin contar la merma</h3>
+      <p class="nota" style="margin-top:8px">
+        El 6% de material que hoy no se cotiza es margen que la empresa absorbe sola.
+        En una obra de $100,000 son $6,000 que ya nadie recupera. La plataforma lo calcula
+        por patrón de colocación y lo mete a la cotización antes de mandarla.
+      </p>
+    </div>
+    <div class="pieza">
+      <h3 style="font-size:17px;font-weight:600">Ni la caja completa</h3>
+      <p class="nota" style="margin-top:8px">
+        Si el cliente pide 120 m² y la caja rinde 2.16 m², se compran 60 cajas: 129.60 m².
+        Esos 9.6 m² se pagan al proveedor y hasta hoy no se facturaban. Ahora se redondea
+        y se cobra la superficie real.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 12 CIERRE -->
+<section class="plato" style="min-height:56vh;display:flex;flex-direction:column;justify-content:center">
+  <div class="hoja"><b>Lámina 13</b><span>Contacto</span></div>
+  <h2 class="enunciado">Cesar Castanon A</h2>
+  <p class="bajada">Desarrollo y soporte de la plataforma.</p>
+  <div class="cintillo">
+    <span class="chip">WhatsApp +1 341 758 3854</span>
+    <span class="chip">cesar@castacu0.com</span>
+  </div>
+  <div class="cota" style="margin-top:38px"><i></i><span></span><em>Mundo de Interiores · Agosto 2026</em><span></span><i></i></div>
+</section>
+
+<script>
+// ---------------------------------------------------------------- notación
+// Mismas reglas que el medidor: dígitos, coma, punto, × y (n).
+
+const RE_NUM = /^\d*\.?\d+$/;
+
+function leerToken(crudo){
+  const t = String(crudo).trim().replace(/[×xX]/g,'*');
+  if(!t) return null;
+  let veces = 1, cuerpo = t;
+  const rep = t.match(/^(.*?)\((\d+)\)$/);
+  if(rep){ cuerpo = rep[1].trim(); veces = parseInt(rep[2],10); }
+  const factores = cuerpo.split('*').map(f=>f.trim());
+  if(!factores.length || factores.some(f=>!RE_NUM.test(f))) return {crudo:t,error:true};
+  return {crudo:t, valor:Number(factores.reduce((a,f)=>a*parseFloat(f),1).toFixed(4)), veces};
+}
+
+function leerLista(texto){
+  const partes = String(texto).split(/[\s,;]+/).filter(Boolean);
+  const valores = [], errores = [];
+  for(const p of partes){
+    const t = leerToken(p);
+    if(!t) continue;
+    t.error ? errores.push(t.crudo) : valores.push(t);
+  }
+  return {
+    valores, errores,
+    suma: Number(valores.reduce((a,v)=>a+v.valor*v.veces,0).toFixed(4)),
+    cuenta: valores.reduce((a,v)=>a+v.veces,0),
+  };
+}
+
+const pesos = n => '$' + Math.round(n).toLocaleString('es-MX');
+const numero = (n,d=2) => n.toLocaleString('es-MX',{minimumFractionDigits:d,maximumFractionDigits:d});
+
+const campo = document.getElementById('notacion');
+const eco = document.getElementById('eco');
+
+function pintarNotacion(){
+  const r = leerLista(campo.value);
+  const partes = r.valores.map(v => v.veces > 1 ? v.valor+'×'+v.veces : String(v.valor));
+
+  eco.innerHTML = partes.length
+    ? partes.join(' + ') + ' = <b>' + numero(r.suma) + ' m²</b>'
+    : '<span style="color:var(--gris-2)">Escribe una medida para empezar.</span>';
+  if(r.errores.length){
+    eco.innerHTML += '<br><span class="mal">No entendí: ' + r.errores.join(', ') + '</span>';
+  }
+
+  document.getElementById('v-area').textContent = numero(r.suma) + ' m²';
+  document.getElementById('v-cuenta').textContent = r.cuenta;
+  document.getElementById('v-mxn').textContent =
+    r.suma > 0 ? pesos(r.suma * 1.10 * 300 * 1.16) : '-';
+}
+
+campo.addEventListener('input', pintarNotacion);
+
+document.querySelectorAll('.tecla').forEach(b=>{
+  b.addEventListener('mousedown', e=>e.preventDefault());
+  b.addEventListener('click', ()=>{
+    if(b.dataset.limpiar !== undefined) campo.value = '';
+    else if(b.dataset.borrar !== undefined) campo.value = campo.value.slice(0,-1);
+    else if(b.dataset.t === '(2)'){
+      // Si la última medida ya trae (n), sube a (n+1); si no, pone (2).
+      const m = campo.value.match(/\((\d+)\)\s*$/);
+      campo.value = m
+        ? campo.value.slice(0, m.index) + '(' + Math.min(999, parseInt(m[1],10)+1) + ')'
+        : campo.value + '(2)';
+    }
+    else campo.value += b.dataset.t;
+    pintarNotacion();
+    campo.focus();
+  });
+});
+
+pintarNotacion();
+
+// ---------------------------------------------------------------- semáforo
+
+const TOTAL = 100000, ANTICIPO = 80000;
+const ESTADOS = {
+  cotizada:  {nombre:'Cotizada',  color:'var(--ambar)',    fondo:'var(--ambar-t)',
+              nota:'Enviada al cliente y sin pago. El anticipo es lo que la vuelve venta.'},
+  anticipada:{nombre:'Anticipada',color:'var(--verde)',    fondo:'var(--verde-t)',
+              nota:'Entró el anticipo. Ya se puede levantar la requisición.'},
+  liquidada: {nombre:'Liquidada', color:'var(--petroleo)', fondo:'var(--petroleo-t)',
+              nota:'Pagada al cien por ciento. No queda saldo.'},
+};
+
+const rango = document.getElementById('pago');
+
+function pintarObra(){
+  const pagado = Number(rango.value);
+  const clave = pagado >= TOTAL - 0.5 ? 'liquidada'
+              : pagado >= ANTICIPO - 0.5 ? 'anticipada' : 'cotizada';
+  const e = ESTADOS[clave];
+
+  document.getElementById('obra-barra').style.background = e.color;
+  document.getElementById('obra').style.borderColor = e.color;
+
+  const sello = document.getElementById('obra-sello');
+  sello.textContent = e.nombre;
+  sello.style.color = e.color;
+  sello.style.background = e.fondo;
+
+  document.getElementById('obra-pagado').textContent = pesos(pagado);
+  document.getElementById('obra-nota').textContent = e.nota;
+
+  const liquidando = clave !== 'cotizada';
+  document.getElementById('obra-faltaK').textContent =
+    liquidando ? 'Falta por liquidar' : 'Falta para arrancar';
+  document.getElementById('obra-falta').textContent =
+    pesos(Math.max(0, (liquidando ? TOTAL : ANTICIPO) - pagado));
+}
+
+rango.addEventListener('input', pintarObra);
+pintarObra();
+</script>
+
+</body>
+</html>
