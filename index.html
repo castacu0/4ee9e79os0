@@ -3,11 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Presentación de la plataforma de cotización y ventas de Mundo de Interiores.">
+<meta name="description" content="Propuesta en cuatro partes: plataforma entregada, listas de precios, cortinas Hunter Douglas y soporte mensual.">
+<!-- Lleva precios: que ningún buscador la guarde aunque alguien comparta el enlace. -->
+<meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#FFFFFF">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23FFFFFF' stroke='%23E4E4E7'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='15' fill='%23141519' text-anchor='middle'%3EMDI%3C/text%3E%3C/svg%3E">
-<title>Plataforma Mundo de Interiores</title>
+<!-- Vista previa del enlace en WhatsApp -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Propuesta · Plataforma Mundo de Interiores">
+<meta property="og:description" content="Fase 1, Fase 2, Fase 3 y soporte mensual. Lo que ya funciona y lo que ganan.">
+<meta property="og:image" content="https://castacu0.github.io/4ee9e79os0/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23F3EEEB'/%3E%3Ctext x='16' y='14.5' font-family='Georgia,serif' font-weight='700' font-size='12' fill='%23686E30' text-anchor='middle'%3EM%3C/text%3E%3Ctext x='12' y='27' font-family='Georgia,serif' font-weight='700' font-size='12' fill='%23F8BA35' text-anchor='middle'%3ED%3C/text%3E%3Ctext x='20.5' y='27' font-family='Georgia,serif' font-weight='700' font-size='12' fill='%23DA5415' text-anchor='middle'%3EI%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="icono.png">
+<title>Propuesta · Plataforma Mundo de Interiores</title>
 <!-- Sin fuentes por internet: se vería sin colores ni caía la interacción del
      todo, mientras carga, en un iPad sin wifi. Usa Georgia y el sans del
      sistema, que ya están instaladas en cualquier iPhone o iPad. -->
@@ -24,6 +34,9 @@
   --ambar:#8A6A2E; --verde:#3D6B52; --petroleo:#3A5A64; --apagado:#85878E;
   --ambar-t:rgba(138,106,46,.12); --verde-t:rgba(61,107,82,.12);
   --petroleo-t:rgba(58,90,100,.12); --apagado-t:rgba(133,135,142,.12);
+  /* Naranja del logotipo. En texto chico va el tono oscuro, que sí se lee
+     sobre blanco; el claro queda para rellenos, reglas y cifras grandes. */
+  --naranja:#DA5415; --naranja-texto:#B5430F; --naranja-t:rgba(218,84,21,.08);
   --serif:Georgia,'Times New Roman',serif;
   --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --mono:ui-monospace,Menlo,monospace;
@@ -59,7 +72,7 @@ a{color:var(--tinta);text-decoration:underline;text-underline-offset:3px;font-we
   text-transform:uppercase; color:var(--gris-2); margin-bottom:26px;
 }
 .hoja::after{content:'';flex:1;height:1px;background:var(--linea)}
-.hoja b{color:var(--tinta);font-weight:700}
+.hoja b{color:var(--naranja-texto);font-weight:700;white-space:nowrap}
 /* La cifra va después de la regla, pegada al margen derecho de la hoja. */
 .hoja .tarifa{order:1;font-variant-numeric:tabular-nums;letter-spacing:.06em;text-decoration:underline;text-underline-offset:3px}
 
@@ -169,14 +182,33 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
 .tabla{width:100%;border-collapse:collapse;font-size:15px}
 .tabla th{
   text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.13em;
-  text-transform:uppercase;color:var(--gris-2);font-weight:400;
-  padding:0 14px 11px 0;border-bottom:1px solid var(--linea-2);
+  text-transform:uppercase;color:var(--naranja-texto);font-weight:600;
+  padding:0 14px 11px 0;border-bottom:2px solid var(--naranja);
 }
+/* La columna que importa: lo que ganan, lo que cuesta. */
+.tabla td.gana{color:var(--naranja-texto);font-weight:700}
+.tabla th.gana{color:var(--naranja-texto)}
+.tabla tr.total td{border-bottom:0;border-top:2px solid var(--tinta);color:var(--tinta);font-weight:700;padding-top:15px}
+.tabla tr.total td.gana{font-size:18px;color:var(--naranja-texto)}
 .tabla td{padding:13px 14px 13px 0;border-bottom:1px solid var(--linea);vertical-align:top;color:var(--gris)}
 .tabla td:first-child{color:var(--tinta);font-weight:600}
 .tabla .n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--tinta)}
 .envoltura{overflow-x:auto}
 .envoltura>.tabla{min-width:520px}
+/* En teléfono, cada renglón se vuelve una tarjeta para que la columna
+   naranja no se esconda detrás de un scroll lateral. */
+@media(max-width:600px){
+  .envoltura>.tabla--apila{min-width:0}
+  .tabla--apila thead{display:none}
+  .tabla--apila tr{display:block;padding:13px 0;border-bottom:1px solid var(--linea)}
+  .tabla--apila td{display:block;border:0;padding:2px 0}
+  .tabla--apila td+td{font-size:14.5px}
+  .tabla--apila td.gana{margin-top:3px;font-size:15.5px}
+  .tabla--apila tr.total{border-top:2px solid var(--tinta);border-bottom:0;margin-top:6px}
+  .tabla--apila tr.total td{border:0;padding-top:2px}
+  .hoja{flex-wrap:wrap;row-gap:6px}
+  .hoja .tarifa{flex-basis:100%}
+}
 
 /* Recuadro de comparación: sin línea de color a la izquierda. El rótulo
    en negritas y subrayado es lo que marca cuál es cuál. */
@@ -213,12 +245,31 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
 .cuenta b{font-weight:500;font-variant-numeric:tabular-nums}
 
 /* ---------- comparación de fases, en chico ---------- */
-.fases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;font-size:12.5px;color:var(--gris)}
-@media(max-width:600px){.fases{grid-template-columns:1fr}}
+.fases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;font-size:12.5px;color:var(--gris)}
+@media(max-width:760px){.fases{grid-template-columns:1fr}}
 .fases h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris-2);font-weight:600;margin-bottom:8px}
 .fases ul{list-style:none;margin:0;padding:0;display:grid;gap:5px}
 .fases li{padding-left:12px;position:relative}
 .fases li::before{content:'–';position:absolute;left:0;color:var(--gris-3)}
+
+/* ---------- marca ---------- */
+.logo{display:block;width:clamp(46px,6vw,64px);height:auto;margin-bottom:34px}
+
+/* Cuatro precios en una fila: la cifra baja un punto para que quepa. */
+.m4 .precio__n{font-size:clamp(34px,3.7vw,46px)}
+.precio__fase{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--naranja-texto);font-weight:700;margin-bottom:6px}
+
+/* ---------- enlaces del final ---------- */
+.botones{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.boton{
+  display:inline-flex;align-items:center;gap:12px;min-height:52px;
+  padding:14px 22px;border-radius:4px;text-decoration:none;font-weight:600;font-size:16px;
+  background:#C94A12;color:#FFFFFF;border:1px solid #C94A12;
+}
+.boton svg{width:18px;height:18px;flex:none}
+.boton--linea{background:var(--bg);color:var(--tinta);border-color:var(--tinta)}
+.boton:active{transform:scale(.98)}
+@media(max-width:520px){.boton{flex:1 1 100%;justify-content:space-between}}
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
@@ -235,7 +286,8 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
 <body>
 <!-- ============================================ 01 PORTADA -->
 <section class="plato portada">
-  <div class="hoja"><b>Lámina 01</b><span>Mundo de Interiores</span></div>
+  <img class="logo" src="logo-mdi.png" width="648" height="1032" alt="Mundo de Interiores">
+  <div class="hoja"><b>Lámina 01</b><span>Propuesta · Mundo de Interiores</span></div>
 
   <h1 class="enunciado">La casa se mide<br>con números,<br>no con letras.</h1>
 
@@ -244,24 +296,28 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
     Levantamiento en obra desde el teléfono, cotización con merma y caja completa,
     y el mes de las tres tiendas en una sola pantalla.
   </p>
+  <p class="bajada" style="margin-top:12px">
+    La propuesta va en <b style="color:var(--tinta)">cuatro partes</b>: lo que ya funciona, las listas
+    de precios, cortinas y persianas de Hunter Douglas, y el soporte mensual.
+  </p>
 
   <div class="cintillo">
     <span class="chip">3 tiendas</span>
     <span class="chip">6 asesores</span>
     <span class="chip">32 proveedores</span>
-    <span class="chip">143 pruebas automáticas</span>
+    <span class="chip">148 pruebas automáticas</span>
   </div>
 
-  <div class="cota"><i></i><span></span><em>Versión 2 · Agosto 2026</em><span></span><i></i></div>
+  <div class="cota"><i></i><span></span><em>Versión 3 · Septiembre 2026</em><span></span><i></i></div>
 </section>
 
 <!-- ============================================ 02 EL PROBLEMA -->
 <section class="plato">
   <div class="hoja"><b>Lámina 02</b><span>De dónde venimos</span></div>
-  <h2 class="enunciado">El cuello de botella nunca<br>fue el precio por metro.</h2>
+  <h2 class="enunciado">Lo caro está alrededor<br>del precio por metro.</h2>
   <p class="bajada">
-    Es todo lo que va alrededor: la merma que nadie cobra, la caja que se compra completa
-    y se factura a medias, y un mes de ventas que solo existe cuando alguien se sienta a juntarlo.
+    La merma que nadie cobra, la caja que se compra completa y se factura a medias,
+    y un mes de ventas que solo existe cuando alguien se sienta a juntarlo.
   </p>
 
   <div class="malla m2" style="margin-top:38px">
@@ -318,7 +374,7 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
   <div class="hoja"><b>Lámina 04</b><span>Medir en obra</span></div>
   <h2 class="enunciado">La notación que<br>ya usa el equipo.</h2>
   <p class="bajada">
-    Sebastián no aprende un sistema nuevo: escribe como escribe hoy en sus notas.
+    Sebastián escribe igual que hoy en sus notas, sin aprender otro sistema.
     La aplicación entiende esa notación y hace la suma. Pruébalo aquí mismo.
   </p>
 
@@ -493,8 +549,9 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
 
 <!-- ============================================ 08 QUÉ INCLUYE -->
 <section class="plato">
-  <div class="hoja"><b>Lámina 08</b><span>Entregado y funcionando</span><b class="tarifa">$85,000 MXN</b></div>
+  <div class="hoja"><b>Lámina 08</b><span>Fase 1 · Entregado y funcionando</span><b class="tarifa">$85,000 MXN</b></div>
   <h2 class="enunciado">22 funciones activas.</h2>
+  <p class="bajada">Todo lo que se vio hasta aquí ya existe y ya está en línea. La fase 1 es entregarlo, capacitar al equipo y preparar el terreno para las fases 2 y 3.</p>
 
   <div class="malla m3" style="margin-top:34px">
     <div class="ficha"><h3>Medidor de obra</h3><p class="nota">Teclado numérico propio, cuartos de un toque, escaleras por escalón, láser o cinta, fotos opcionales.</p></div>
@@ -508,21 +565,35 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
     <div class="ficha"><h3>Capacitación y respaldo</h3><p class="nota">Tutorial guiado, asistente de dudas con 50 respuestas, respaldo completo en un archivo.</p></div>
   </div>
 
-  <div class="cota" style="margin-top:32px"><i></i><span></span><em>143 pruebas automáticas · todas pasan</em><span></span><i></i></div>
+  <div class="destacado" style="margin-top:26px">
+    <div class="rotulo" style="color:var(--naranja-texto);font-weight:700">Al recibir el anticipo</div>
+    <h3 class="sub" style="margin-top:10px">Accesos y plano de arquitectura.</h3>
+    <p class="bajada" style="margin-top:12px">
+      Mundo de Interiores comparte los accesos a sus servicios: <b style="color:var(--tinta)">e-Pedidos de Hunter Douglas</b>,
+      el Drive con las listas de Excel, el correo donde llegan las listas de proveedores y el sitio web.
+      Con eso se documenta cómo trabajan hoy y se entrega el <b style="color:var(--tinta);text-decoration:underline;text-underline-offset:3px">plano de las fases 2 y 3</b>:
+      qué datos viven dónde, cómo se conectan y en qué orden se migran.
+    </p>
+    <p class="nota" style="margin-top:12px">
+      Donde el servicio lo permita, con un usuario propio en lugar de la contraseña personal de alguien del equipo.
+    </p>
+  </div>
+
+  <div class="cota" style="margin-top:32px"><i></i><span></span><em>148 pruebas automáticas · todas pasan</em><span></span><i></i></div>
 </section>
 
 <!-- ============================================ 09 FASE 2 -->
 <section class="plato">
-  <div class="hoja"><b>Lámina 09</b><span>Lo que falta · Fase 2</span><b class="tarifa">$120,000 MXN</b></div>
+  <div class="hoja"><b>Lámina 09</b><span>Fase 2 · Listas de precios</span><b class="tarifa">$75,000 MXN</b></div>
   <h2 class="enunciado">Sin las listas de precios,<br>el número sigue siendo aproximado.</h2>
   <p class="bajada">
-    Es el trabajo que hace que el estimado de campo y el margen dejen de ser promedios.
-    Precio cerrado.
+    Los Excel de proveedores se migran y se conectan a la plataforma. Es el trabajo que hace
+    que el estimado de campo y el margen dejen de ser promedios. Precio cerrado.
   </p>
 
   <div class="malla m2" style="margin-top:34px">
     <div class="pieza">
-      <h3 style="font-size:17px;font-weight:600">Migración de datos</h3>
+      <h3 style="font-size:17px;font-weight:600">Migración de los Excel</h3>
       <ul class="lista" style="margin-top:14px">
         <li>34 hojas de Excel a hoja de cálculo compartida.</li>
         <li>32 proveedores con su estructura real: apartado, proveedor, código, línea, color y bisel.</li>
@@ -530,7 +601,7 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
       </ul>
     </div>
     <div class="pieza">
-      <h3 style="font-size:17px;font-weight:600">Plataforma compartida</h3>
+      <h3 style="font-size:17px;font-weight:600">Conexión a la plataforma</h3>
       <ul class="lista" style="margin-top:14px">
         <li>Base de datos: un solo catálogo que las tres tiendas ven igual.</li>
         <li>Cuenta y contraseña por persona, en lugar de la separación por confianza de hoy.</li>
@@ -541,9 +612,54 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
   </div>
 </section>
 
-<!-- ============================================ 10 ENLACES -->
+<!-- ============================================ 10 FASE 3 · CORTINAS -->
 <section class="plato">
-  <div class="hoja"><b>Lámina 10</b><span>Cómo se entra hoy</span></div>
+  <div class="hoja"><b>Lámina 10</b><span>Fase 3 · Cortinas y persianas</span><b class="tarifa">$50,000 MXN</b></div>
+  <h2 class="enunciado">Hunter Douglas,<br>cotizado en minutos.</h2>
+  <p class="bajada">
+    Hoy una cortina se arma en e-Pedidos campo por campo, y las listas de precios viven en PDFs
+    sueltos. La fase 3 pasa esas listas a la base de datos con la misma estructura del portal,
+    para que la cortina salga <b style="color:var(--tinta)">en la misma cotización que el piso</b>.
+  </p>
+
+  <div class="envoltura" style="margin-top:32px">
+    <table class="tabla tabla--apila">
+      <thead><tr><th>Paso</th><th>Lo que se elige</th><th class="gana">Ejemplo de una orden real</th></tr></thead>
+      <tbody>
+        <tr><td>Medida</td><td>Ancho × alto y cantidad</td><td class="gana">2000 × 2000 mm</td></tr>
+        <tr><td>Familia y línea</td><td>El producto y su medida de panal o lama</td><td class="gana">Duette · 20 mm</td></tr>
+        <tr><td>Colección y color</td><td>La tela y su tono</td><td class="gana">Classic Room Darkening · Desert Sands</td></tr>
+        <tr><td>Accionamiento</td><td>Manual o motorizado, y del lado del control</td><td class="gana">PowerView motorizado · derecho</td></tr>
+        <tr><td>Instalación</td><td>Dónde se monta</td><td class="gana">Dentro de marco, a techo</td></tr>
+        <tr><td>Obligatorios</td><td>Lo que el sistema exige para funcionar</td><td class="gana">Fuente de alimentación</td></tr>
+        <tr><td>Opcionales</td><td>Controles y accesorios con su precio</td><td class="gana">Control remoto, hub, Surface</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="malla m2" style="margin-top:30px">
+    <div class="pieza">
+      <h3 style="font-size:17px;font-weight:600">Lo que entra a la base</h3>
+      <ul class="lista" style="margin-top:14px">
+        <li>Las listas de precios de cada familia, de PDF a tabla por ancho y alto.</li>
+        <li>Obligatorios y opcionales, cada uno con su precio.</li>
+        <li>Precio de lista y precio factura por renglón, para ver el margen de la cortina igual que el del piso.</li>
+      </ul>
+    </div>
+    <div class="pieza">
+      <h3 style="font-size:17px;font-weight:600">Lo que cambia en la tienda</h3>
+      <ul class="lista" style="margin-top:14px">
+        <li>El asesor captura la medida, elige familia y color, y el precio aparece al instante.</li>
+        <li>Cortinas y pisos en un solo PDF para el cliente.</li>
+        <li>Cuando Hunter Douglas manda lista nueva, se recarga dentro del soporte mensual.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ 11 ENLACES -->
+<section class="plato">
+  <div class="hoja"><b>Lámina 11</b><span>Cómo se entra hoy</span></div>
   <h2 class="enunciado">Ya está en línea.</h2>
   <p class="bajada">
     Con dominio propio, ninguna de estas direcciones vuelve a aparecer: el enlace que
@@ -591,13 +707,14 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
   </div>
 </section>
 
-<!-- ============================================ 11 INVERSIÓN -->
+<!-- ============================================ 12 INVERSIÓN -->
 <section class="plato">
-  <div class="hoja"><b>Lámina 11</b><span>Inversión</span></div>
-  <h2 class="enunciado">Lo que cuesta.</h2>
+  <div class="hoja"><b>Lámina 12</b><span>Inversión</span></div>
+  <h2 class="enunciado">Lo que cuesta, en cuatro partes.</h2>
 
-  <div class="malla m3" style="margin-top:34px;align-items:stretch">
+  <div class="malla m4" style="margin-top:34px;align-items:stretch">
     <div class="precio precio--fuerte">
+      <div class="precio__fase">Fase 1</div>
       <div class="rotulo">Entregado y funcionando</div>
       <div class="precio__n">$85,000</div>
       <div class="precio__u">MXN · pago único</div>
@@ -606,17 +723,18 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
         <li>Medidor de obra, cotizador, catálogo, PDF y reporte de ventas.</li>
         <li>Publicada en línea, lista para el teléfono de quien mide.</li>
         <li>Tutorial guiado y asistente de dudas para los seis asesores.</li>
-        <li>143 pruebas automáticas del motor de cálculo.</li>
+        <li>Accesos a sus servicios y plano de arquitectura de las fases 2 y 3.</li>
       </ul>
     </div>
 
     <div class="precio">
-      <div class="rotulo">Fase 2 · precio cerrado</div>
-      <div class="precio__n">$120,000</div>
+      <div class="precio__fase">Fase 2</div>
+      <div class="rotulo">Listas de precios</div>
+      <div class="precio__n">$75,000</div>
       <div class="precio__u">MXN · pago único</div>
       <div class="precio__terminos">60% al inicio · 40% contra entrega</div>
       <ul class="lista">
-        <li>Las 34 listas de precios y los 32 proveedores, migrados y verificados.</li>
+        <li>Las 34 listas de Excel y los 32 proveedores, migrados y conectados.</li>
         <li>Base de datos compartida: un solo catálogo para las tres tiendas.</li>
         <li>Cuenta y contraseña por persona, con permisos reales.</li>
         <li>Mes consolidado automático y respaldo diario fuera de la oficina.</li>
@@ -624,9 +742,25 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
     </div>
 
     <div class="precio">
+      <div class="precio__fase">Fase 3</div>
+      <div class="rotulo">Cortinas y persianas</div>
+      <div class="precio__n">$50,000</div>
+      <div class="precio__u">MXN · pago único</div>
+      <div class="precio__terminos">60% al inicio · 40% contra entrega</div>
+      <ul class="lista">
+        <li>Listas de precios de Hunter Douglas, de PDF a base de datos.</li>
+        <li>Familia, línea, colección, color, accionamiento e instalación, como en e-Pedidos.</li>
+        <li>Obligatorios y opcionales, cada uno con su precio.</li>
+        <li>Cortinas y pisos en la misma cotización.</li>
+      </ul>
+    </div>
+
+    <div class="precio">
+      <div class="precio__fase">Mantenimiento</div>
       <div class="rotulo">Soporte y cambios</div>
       <div class="precio__n">$10,000</div>
       <div class="precio__u">MXN · al mes</div>
+      <div class="precio__terminos"><b style="color:var(--tinta)">Primer mes de cortesía</b> · contrato mínimo de 4 meses</div>
       <ul class="lista">
         <li>Cambios de precios, tarifas y catálogo cuando el proveedor los mueva.</li>
         <li>Ajustes a la plataforma conforme cambie la operación.</li>
@@ -636,7 +770,21 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
     </div>
   </div>
 
-  <p class="nota" style="margin-top:22px">
+  <p class="rotulo" style="margin-top:38px">Calendario de pagos</p>
+  <div class="envoltura" style="margin-top:12px">
+    <table class="tabla tabla--apila">
+      <thead><tr><th>Parte</th><th class="gana">Inversión</th><th>Cómo se paga</th></tr></thead>
+      <tbody>
+        <tr><td>Fase 1 · Entregado y funcionando</td><td class="n gana">$85,000</td><td>$51,000 a la firma · $34,000 contra entrega</td></tr>
+        <tr><td>Fase 2 · Listas de precios</td><td class="n gana">$75,000</td><td>$45,000 al inicio · $30,000 contra entrega</td></tr>
+        <tr><td>Fase 3 · Cortinas y persianas</td><td class="n gana">$50,000</td><td>$30,000 al inicio · $20,000 contra entrega</td></tr>
+        <tr><td>Mantenimiento · primeros 4 meses</td><td class="n gana">$30,000</td><td>Mes 1 de cortesía · $10,000 en los meses 2, 3 y 4</td></tr>
+        <tr class="total"><td>Total</td><td class="n gana">$240,000</td><td>MXN antes de IVA, con $10,000 de cortesía ya descontados</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="nota" style="margin-top:18px">
     Precios en pesos mexicanos, antes de IVA. Sin descuento. El dominio propio se renta aparte,
     por debajo de $1,000 al año; el hosting no tiene costo.
   </p>
@@ -654,22 +802,31 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
     <div>
       <h4>Fase 2 agrega</h4>
       <ul>
-        <li>Las 34 listas de precios y los 32 proveedores, ya migrados.</li>
+        <li>Las 34 listas de Excel y los 32 proveedores, ya migrados.</li>
         <li>Un solo catálogo compartido entre Santa Fe, Pedregal y la tercera tienda.</li>
         <li>Cuenta y contraseña por persona, con permisos reales.</li>
         <li>Mes consolidado automático y respaldo diario fuera de la oficina.</li>
       </ul>
     </div>
+    <div>
+      <h4>Fase 3 agrega</h4>
+      <ul>
+        <li>Cortinas y persianas Hunter Douglas dentro del cotizador.</li>
+        <li>Precio por ancho y alto, sin abrir el PDF de la lista.</li>
+        <li>Obligatorios, opcionales y margen, igual que en pisos.</li>
+        <li>Un solo PDF para el cliente, con piso y cortina.</li>
+      </ul>
+    </div>
   </div>
 </section>
 
-<!-- ============================================ 12 RETORNO -->
+<!-- ============================================ 13 LO QUE GANAN -->
 <section class="plato">
-  <div class="hoja"><b>Lámina 12</b><span>Lo que devuelve</span></div>
-  <h2 class="enunciado">Se paga sola<br>a las 62 cotizaciones.</h2>
+  <div class="hoja"><b>Lámina 13</b><span>Lo que ganan</span></div>
+  <h2 class="enunciado">La fase 1 se paga sola<br>a las 62 cotizaciones.</h2>
   <p class="bajada">
-    No es una promesa: es la cuenta con los supuestos que ustedes mismos capturaron en Ajustes,
-    y ahí se pueden cambiar. Con seis asesores son diez cotizaciones cada uno.
+    La cuenta sale de los supuestos que ustedes mismos capturaron en Ajustes, y ahí se pueden
+    cambiar. Con seis asesores son diez cotizaciones cada uno.
   </p>
 
   <div class="destacado" style="margin-top:32px">
@@ -709,18 +866,56 @@ input[type=range]{width:100%;accent-color:var(--tinta);margin-top:6px}
       </p>
     </div>
   </div>
+
+  <p class="rotulo" style="margin-top:38px">Dónde está el dinero</p>
+  <div class="envoltura" style="margin-top:12px">
+    <table class="tabla tabla--apila">
+      <thead><tr><th>Qué</th><th>De dónde sale</th><th class="gana">Lo que ganan</th></tr></thead>
+      <tbody>
+        <tr><td>Tiempo del asesor</td><td>3.3 horas liberadas por cotización, a $420 la hora</td><td class="gana">$1,386 por cotización</td></tr>
+        <tr><td>Con 20 cotizaciones al mes</td><td>Solo el tiempo del asesor, sin contar merma</td><td class="gana">$27,720 al mes</td></tr>
+        <tr><td>Merma cobrada</td><td>El 6% de material que hoy absorbe la empresa</td><td class="gana">$6,000 por obra de $100,000</td></tr>
+        <tr><td>Caja completa</td><td>Lo que se compra al proveedor y hoy no se factura</td><td class="gana">9.6 m² en una obra de 120 m²</td></tr>
+        <tr><td>Cortinas, fase 3</td><td>Hoy se arman campo por campo en e-Pedidos</td><td class="gana">Precio al instante, en el mismo PDF</td></tr>
+        <tr><td>Cobranza</td><td>El semáforo por obra</td><td class="gana">Qué obra no ha pagado, sin preguntar</td></tr>
+        <tr><td>El mes de ventas</td><td>Reporte por asesor y por tienda</td><td class="gana">Se arma solo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="destacado" style="margin-top:26px">
+    <p class="bajada" style="margin-top:0;max-width:none">
+      Las cuatro partes juntas, con los primeros cuatro meses de soporte, suman
+      <b style="color:var(--tinta);text-decoration:underline;text-underline-offset:3px">$240,000</b>.
+      Solo con el tiempo del asesor se recuperan en <b style="color:var(--tinta)">174 cotizaciones</b>, 29 por asesor.
+      Cada obra de $100,000 con la merma bien cobrada suma $6,000 más.
+    </p>
+  </div>
 </section>
 
-<!-- ============================================ 12 CIERRE -->
+<!-- ============================================ 14 CIERRE -->
 <section class="plato" style="min-height:56vh;display:flex;flex-direction:column;justify-content:center">
-  <div class="hoja"><b>Lámina 13</b><span>Contacto</span></div>
+  <div class="hoja"><b>Lámina 14</b><span>Contacto</span></div>
   <h2 class="enunciado">Cesar Castanon A</h2>
   <p class="bajada">Desarrollo y soporte de la plataforma.</p>
   <div class="cintillo">
     <span class="chip">WhatsApp +1 341 758 3854</span>
     <span class="chip">cesar@castacu0.com</span>
   </div>
-  <div class="cota" style="margin-top:38px"><i></i><span></span><em>Mundo de Interiores · Agosto 2026</em><span></span><i></i></div>
+
+  <p class="rotulo" style="margin-top:40px">Pruébenla desde el teléfono</p>
+  <div class="botones" style="margin-top:12px">
+    <a class="boton" href="https://castacu0.github.io/cotizador-fmp/#/medidor">
+      Cotizador móvil
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+    <a class="boton boton--linea" href="https://castacu0.github.io/cotizador-fmp/pruebas.html">
+      Las 148 pruebas del motor
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+
+  <div class="cota" style="margin-top:38px"><i></i><span></span><em>Mundo de Interiores · Septiembre 2026</em><span></span><i></i></div>
 </section>
 
 <script>
